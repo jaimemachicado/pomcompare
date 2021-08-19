@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 
 const baseStyle = {
@@ -30,16 +30,32 @@ const baseStyle = {
   };
 
 function LoadFiles(props) {
+    const [pomContent, setPomContent] = useState("");
+
+    const onDrop = useCallback((acceptedFiles) => {
+        acceptedFiles.forEach((file) => {
+          const reader = new FileReader()
+    
+          reader.onabort = () => console.log('file reading was aborted')
+          reader.onerror = () => console.log('file reading has failed')
+          reader.onload = () => {
+          // Do whatever you want with the file contents
+            const binaryStr = reader.result
+            console.log(binaryStr)
+            setPomContent(binaryStr);
+          }
+          reader.readAsText(file)
+        })
+        
+      }, [])
   const {
-    acceptedFiles,
-    fileRejections,
     getRootProps,
     getInputProps,
     isDragActive,
     isDragAccept,
     isDragReject
   } = useDropzone({
-    accept: '.xml'
+    accept: '.xml', onDrop
   });
 
   const style = useMemo(() => ({
@@ -53,37 +69,18 @@ function LoadFiles(props) {
     isDragAccept
   ]);
 
-  const acceptedFileItems = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
-
-  const fileRejectionItems = fileRejections.map(({ file, errors }) => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-      <ul>
-        {errors.map(e => (
-          <li key={e.code}>{e.message}</li>
-        ))}
-      </ul>
-    </li>
-  ));
-
   return (
-    <section className="container">
+    <div className="container">
       <div {...getRootProps({style})}>
         <input {...getInputProps()} />
         <p>Drag 'n' drop some files here, or click to select files</p>
         <em>(Only *.xml files will be accepted)</em>
       </div>
       <aside>
-        <h4>Accepted files</h4>
-        <ul>{acceptedFileItems}</ul>
-        <h4>Rejected files</h4>
-        <ul>{fileRejectionItems}</ul>
+        <h4>File content:</h4>
+        <ul>{pomContent}</ul>
       </aside>
-    </section>
+    </div>
   );
 }
 export default LoadFiles;
