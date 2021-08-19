@@ -2,11 +2,3 @@
   text-align: center;
 }
 
-.navstyle {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background: rgb(40, 40, 176);
-  color: white;
-  min-height: 10vh;
-}
