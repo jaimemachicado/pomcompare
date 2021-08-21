@@ -1,4 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
+import AlertError from '../alertError/AlertError';
 import {useDropzone} from 'react-dropzone';
 
 const baseStyle = {
@@ -31,23 +32,27 @@ const baseStyle = {
 
 function LoadFiles(props) {
     const [pomContent, setPomContent] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [fileName, setFileName] = useState("");
 
-    const onDrop = useCallback((acceptedFiles) => {
+    const onDrop = useCallback((acceptedFiles,fileRejections) => {
         acceptedFiles.forEach((file) => {
-          const reader = new FileReader()
-    
-          reader.onabort = () => console.log('file reading was aborted')
-          reader.onerror = () => console.log('file reading has failed')
+          const reader = new FileReader();
+          reader.onabort = () => console.log('file reading was aborted');
+          reader.onerror = () => console.log('file reading has failed');
           reader.onload = () => {
-          // Do whatever you want with the file contents
-            const binaryStr = reader.result
-            console.log(binaryStr)
-            setPomContent(binaryStr);
+            setPomContent(reader.result);
           }
-          reader.readAsText(file)
-        })
+          reader.readAsText(file);
+          setShowAlert(false);
+        });
+
+        fileRejections.forEach((fileRejected) => {
+          setFileName(fileRejected.file.name);
+          setShowAlert(true);
+        });
         
-      }, [])
+      }, []);
   const {
     getRootProps,
     getInputProps,
@@ -68,7 +73,7 @@ function LoadFiles(props) {
     isDragReject,
     isDragAccept
   ]);
-
+  
   return (
     <div className="container">
       <div {...getRootProps({style})}>
@@ -76,6 +81,7 @@ function LoadFiles(props) {
         <p>Drag 'n' drop some files here, or click to select files</p>
         <em>(Only *.xml files will be accepted)</em>
       </div>
+      {showAlert && <AlertError fileName={fileName}/>}
       <aside>
         <h4>File content:</h4>
         <ul>{pomContent}</ul>
