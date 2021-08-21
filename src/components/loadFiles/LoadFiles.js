@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import AlertError from '../alertError/AlertError';
 import {useDropzone} from 'react-dropzone';
+import XMLViewer from 'react-xml-viewer';
 
 const baseStyle = {
     flex: 1,
@@ -74,6 +75,10 @@ function LoadFiles(props) {
     isDragAccept
   ]);
   
+  const customTheme = {
+    "overflowBreak":"true"
+  }
+
   return (
     <div className="container">
       <div {...getRootProps({style})}>
@@ -84,7 +89,9 @@ function LoadFiles(props) {
       {showAlert && <AlertError fileName={fileName}/>}
       <aside>
         <h4>File content:</h4>
-        <ul>{pomContent}</ul>
+        {!showAlert 
+          && pomContent.length>0 
+          && <XMLViewer xml={pomContent} identSize={4} collapsible={true} theme={customTheme}/>}
       </aside>
     </div>
   );

@@ -9,10 +9,10 @@ function App() {
           <NavBar></NavBar>
         </Row>
         <Row>
-          <Col>
+          <Col sm={{span:5}}>
             <LoadFiles></LoadFiles>
           </Col>
-          <Col>
+          <Col sm={{span:5, offset:2}}>
             <LoadFiles></LoadFiles>
           </Col>
         </Row>
