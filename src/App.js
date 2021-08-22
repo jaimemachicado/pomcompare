@@ -1,21 +1,61 @@
 import NavBar from "./components/navbar/NavBar";
+import {useState} from 'react';
 import LoadFiles from "./components/loadFiles/LoadFiles";
 import {Col, Container, Row } from "react-bootstrap";
+import { Button } from 'react-bootstrap';
+
 
 function App() {
+  const [pomViejo, setPomViejo] = useState("");
+  const [pomNuevo, setPomNuevo] = useState("");
+  const [comparing, setComparing] = useState(false);
+
+
+  const handleCompareClick = (pomViejo, pomNuevo) => {
+    if(pomViejo.length > 0 && pomNuevo.length > 0) {
+      setComparing(true);
+      console.log("clicked with:");
+      console.log("pomViejo: "+pomViejo);
+      console.log("pomNuevo: " + pomNuevo);  
+    }
+  }
+
+  const handleRestartClick = () => {
+    setComparing(false);
+    setPomNuevo("");
+    setPomViejo("");
+  }
+
   return (
       <Container>
         <Row>
           <NavBar></NavBar>
         </Row>
+        {!comparing && 
+        <div>
         <Row>
           <Col sm={{span:5}}>
-            <LoadFiles></LoadFiles>
-          </Col>
+            <LoadFiles updatePom={setPomViejo}></LoadFiles>
+          </Col>  
           <Col sm={{span:5, offset:2}}>
-            <LoadFiles></LoadFiles>
+            <LoadFiles updatePom={setPomNuevo}></LoadFiles>
           </Col>
         </Row>
+        <Row>
+        <Button variant="primary" onClick={() => handleCompareClick(pomViejo, pomNuevo)}>
+          Compare  
+        </Button>
+        </Row></div>}
+        {comparing && <div>
+        <Row>
+          POM files compared!
+        </Row>
+        <Row>
+        <Button variant="primary" onClick={() => handleRestartClick(pomViejo, pomNuevo)}>
+          Compare other POM files
+        </Button>
+        </Row>
+        </div>}
       </Container>
 
   );

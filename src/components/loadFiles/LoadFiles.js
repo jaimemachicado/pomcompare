@@ -43,12 +43,14 @@ function LoadFiles(props) {
           reader.onerror = () => console.log('file reading has failed');
           reader.onload = () => {
             setPomContent(reader.result);
+            props.updatePom(reader.result);
           }
           reader.readAsText(file);
           setShowAlert(false);
         });
 
         fileRejections.forEach((fileRejected) => {
+          props.updatePom("");
           setFileName(fileRejected.file.name);
           setShowAlert(true);
         });
@@ -91,7 +93,7 @@ function LoadFiles(props) {
         <h4>File content:</h4>
         {!showAlert 
           && pomContent.length>0 
-          && <XMLViewer xml={pomContent} identSize={4} collapsible={true} theme={customTheme}/>}
+          && <XMLViewer xml={pomContent} collapsible={true} theme={customTheme}/>}
       </aside>
     </div>
   );
