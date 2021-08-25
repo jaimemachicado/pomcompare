@@ -3,7 +3,7 @@ import {useState} from 'react';
 import LoadFiles from "./components/loadFiles/LoadFiles";
 import {Col, Container, Row } from "react-bootstrap";
 import { Button } from 'react-bootstrap';
-
+import {dependenciesDiff} from './common/DifferencesFunctions';
 
 function App() {
   const [pomViejo, setPomViejo] = useState("");
@@ -14,9 +14,7 @@ function App() {
   const handleCompareClick = (pomViejo, pomNuevo) => {
     if(pomViejo.length > 0 && pomNuevo.length > 0) {
       setComparing(true);
-      console.log("clicked with:");
-      console.log("pomViejo: "+pomViejo);
-      console.log("pomNuevo: " + pomNuevo);  
+      console.log("Resultado comparacion: ",dependenciesDiff(pomViejo, pomNuevo));
     }
   }
 
