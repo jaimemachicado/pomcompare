@@ -61,7 +61,7 @@ const createDependenciesMap = (listaDependencias) => {
         let artifactId = dependencia.children[1].value;
         let version = dependencia.children[2].value;
         if(version){
-            mapDependencias[groupId + "-%%%-" + artifactId] = version;
+            mapDependencias[groupId + "#" + artifactId] = version;
         }
     }
     return mapDependencias;

@@ -8,6 +8,7 @@ import {dependenciesDiff} from './common/DifferencesFunctions';
 function App() {
   const [pomViejo, setPomViejo] = useState("");
   const [pomNuevo, setPomNuevo] = useState("");
+  const [pomResultante, setPomResultante] = useState("");
   const [comparing, setComparing] = useState(false);
 
 
@@ -22,6 +23,7 @@ function App() {
     setComparing(false);
     setPomNuevo("");
     setPomViejo("");
+    setPomResultante("");
   }
 
   return (
