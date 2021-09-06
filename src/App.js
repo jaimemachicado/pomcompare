@@ -1,14 +1,15 @@
 import NavBar from "./components/navbar/NavBar";
 import {useState} from 'react';
 import LoadFiles from "./components/loadFiles/LoadFiles";
-import {Col, Container, Row } from "react-bootstrap";
+import {Col, Container, Row, Accordion} from "react-bootstrap";
 import { Button } from 'react-bootstrap';
 import {dependenciesDiff} from './common/DifferencesFunctions';
+import TableResult from "./components/tableResult/TableResult";
 
 function App() {
   const [pomViejo, setPomViejo] = useState("");
   const [pomNuevo, setPomNuevo] = useState("");
-  const [pomResultante, setPomResultante] = useState("");
+  const [resultadoComparacion, setResultadoComparacion] = useState();
   const [comparing, setComparing] = useState(false);
 
 
@@ -16,6 +17,7 @@ function App() {
     if(pomViejo.length > 0 && pomNuevo.length > 0) {
       setComparing(true);
       console.log("Resultado comparacion: ",dependenciesDiff(pomViejo, pomNuevo));
+      setResultadoComparacion(dependenciesDiff(pomViejo,pomNuevo));
     }
   }
 
@@ -23,7 +25,6 @@ function App() {
     setComparing(false);
     setPomNuevo("");
     setPomViejo("");
-    setPomResultante("");
   }
 
   return (
@@ -48,7 +49,32 @@ function App() {
         </Row></div>}
         {comparing && <div>
         <Row>
-          POM files compared!
+        <Accordion defaultActiveKey="0">
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>Common Dependencies:</Accordion.Header>
+            <Accordion.Body>
+              <TableResult dependencias={resultadoComparacion.comunes}></TableResult>
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="1">
+            <Accordion.Header>Deleted Dependencies:</Accordion.Header>
+            <Accordion.Body>
+              <TableResult dependencias={resultadoComparacion.soloEnFichero1}></TableResult>
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="2">
+            <Accordion.Header>Added Dependencies:</Accordion.Header>
+            <Accordion.Body>
+              <TableResult dependencias={resultadoComparacion.soloEnFichero2}></TableResult>
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="3">
+            <Accordion.Header>Updated Dependencies:</Accordion.Header>
+            <Accordion.Body>
+              <TableResult dependencias={resultadoComparacion.diferencias}></TableResult>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
         </Row>
         <Row>
         <Button variant="primary" onClick={() => handleRestartClick(pomViejo, pomNuevo)}>
